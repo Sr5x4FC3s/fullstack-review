@@ -10,7 +10,21 @@ class App extends React.Component {
     this.state = {
       repos: ['this renders']
     }
+  }
 
+  getRequest() {
+    alert(`request has been sent, your repos are incoming!`);
+    $.ajax({
+      url: `/repos`,
+      type: `GET`,
+      contentType: `FILL_ME_IN`,
+      success: (data) => {
+        console.log(`success: `, data);
+      },
+      error: (data) => {
+        console.log(`error: `, data);
+      }
+    })
   }
 
   search (term) {
