@@ -28,6 +28,7 @@ class App extends React.Component {
         this.setState({
           repos: datum
         });
+        datum = [];
       },
       error: (data) => {
         console.log(`error: `, data);
