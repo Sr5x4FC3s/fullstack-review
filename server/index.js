@@ -1,16 +1,7 @@
 const express = require('express');
 const parser = require('body-parser');
 const helper = require('../helpers/github.js');
-const save = require('../database/index.js');
-// const MongoClient = require('mongodb').MongoClient;
-//
-// MongoClient.connect('mongodb://localhost:1128', (err, db) => {
-//   if (err) throw err;
-//   db.collection('repos')find().toArray((err, result) => {
-//     if (err) throw err;
-//     console.log(result);
-//   })
-// })
+const repo = require('../database/index.js');
 
 let app = express();
 
@@ -26,10 +17,12 @@ app.post('/repos', function (req, res) {
   let data = req.body;
   console.log('this is data11111111', data);
   helper.getReposByUsername(data, (item) => {
-    let parsedItem = JSON.parse(item);
+    let parsedItem = JSON.parse(item); //an array of objects
     let itemLength = parsedItem.length;
-    console.log('this is an object', parsedItem[0].owner.login);
+    // console.log('this is an object', parsedItem[0].owner.login);
+    // invoke the database func to save new instances to the DB
 
+    repo.save(parsedItem);
   });
   res.status(200).send(data);
 });
@@ -37,8 +30,12 @@ app.post('/repos', function (req, res) {
 app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
-  let data = req;
-  console.log(req);
+  let listOfUsers = [];
+  repo.search((collection, error) => {
+    if (error) throw error;
+    res.send(collection)
+  });
+
 });
 
 let port = 1128;

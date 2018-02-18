@@ -3,23 +3,31 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import Search from './components/Search.jsx';
 import RepoList from './components/RepoList.jsx';
+import Promise from 'bluebird';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      repos: ['this renders']
+      repos: []
     }
   }
 
+  //invoke this func on click to send get request to have things render on the screen
   getRequest() {
     alert(`request has been sent, your repos are incoming!`);
     $.ajax({
       url: `/repos`,
       type: `GET`,
-      contentType: `FILL_ME_IN`,
       success: (data) => {
         console.log(`success: `, data);
+        let datum = [];
+        data.forEach(element => {
+          datum.push(element.html_url);
+        })
+        this.setState({
+          repos: datum
+        });
       },
       error: (data) => {
         console.log(`error: `, data);
@@ -36,6 +44,7 @@ class App extends React.Component {
       contentType: `text/plain`,
       success: (data) => {
         console.log('success', data);
+        this.getRequest();
       },
       error: (data) => {
         console.log('error', data);
